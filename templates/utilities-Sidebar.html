@@ -1,0 +1,143 @@
+
+        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{% url 'index' %}">
+                <div class="sidebar-brand-icon rotate-n-15">
+                    <i class="fas fa-clinic-medical"></i>
+                </div>
+                <div class="sidebar-brand-text mx-3">FHIR Portal<sup>0.1.0</sup></div>
+            </a>
+            <hr class="sidebar-divider my-0">
+            <div class="sidebar-heading">
+            </div>
+			{% if user.is_authenticated %}
+				{% if right.0.outpatient %}
+				<li class="nav-item">
+					<a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
+						aria-expanded="true" aria-controls="collapseTwo">
+						<i class="fas fa-fw fa-diagnoses"></i>
+						<span>單張報告</span>
+					</a>
+					<div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+						<div class="bg-white py-2 collapse-inner rounded">
+							<a class="collapse-item" href="{% url 'DischargeSummary' %}">出院病摘</a>
+							<a class="collapse-item" href="{% url 'VisitNote' %}">門診病歷</a>
+							<a class="collapse-item" href="{% url 'VisitNote' %}">急診病歷</a>
+						</div>
+					</div>
+				</li>
+				{% endif %}				
+				{% if right.0.emergency %}
+				<li class="nav-item">
+					<a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities"
+						aria-expanded="true" aria-controls="collapseUtilities">
+						<i class="fas fa-fw fa-first-aid"></i>
+						<span>急診作業</span>
+					</a>
+					<div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities"
+						data-parent="#accordionSidebar">
+						<div class="bg-white py-2 collapse-inner rounded">
+							<a class="collapse-item" href="{% url 'ObservationImaging' %}">ObservationImaging EKG</a>
+						</div>
+					</div>
+				</li>
+				{% endif %}
+				{% if right.0.inpatient %}
+				<!-- Nav Item - Utilities Collapse Menu -->
+				<li class="nav-item">
+					<a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseIH"
+						aria-expanded="true" aria-controls="collapseIH">
+						<i class="fas fa-fw fa-hospital"></i>
+						<span>住診作業</span>
+					</a>
+					<div id="collapseIH" class="collapse" aria-labelledby="headingUtilities"
+						data-parent="#accordionSidebar">
+						<div class="bg-white py-2 collapse-inner rounded">
+							<a class="collapse-item" href="{% url 'Encounter' %}">住院資料</a>
+							<a class="collapse-item" href="{% url 'CarePlan' %}">入院護理資料</a>
+							<a class="collapse-item" href="{% url 'DiagnosticReportNursing' %}">護理紀錄</a>					
+						</div>
+					</div>
+				</li>
+				{% endif %}
+				{% if right.0.medication %}
+				<li class="nav-item">
+					<a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseM"
+						aria-expanded="true" aria-controls="collapseM">
+						<i class="fas fa-fw fa-capsules"></i>
+						<span>用藥紀錄</span>
+					</a>
+					<div id="collapseM" class="collapse" aria-labelledby="headingUtilities"
+						data-parent="#accordionSidebar">
+						<div class="bg-white py-2 collapse-inner rounded">
+							<a class="collapse-item" href="{% url 'Medication' %}">電子處方箋</a>
+							<a class="collapse-item" href="{% url 'MedicationRequest' %}">調劑單張</a>
+						</div>
+					</div>
+				</li>
+				{% endif %}
+				{% if right.0.report %}
+				<!-- Nav Item - Pages Collapse Menu -->
+				<li class="nav-item">
+					<a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
+						aria-expanded="true" aria-controls="collapsePages">
+						<i class="fas fa-fw fa-notes-medical"></i>
+						<span>檢查報告</span>
+					</a>
+					<div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+						<div class="bg-white py-2 collapse-inner rounded">
+							<a class="collapse-item" href="{% url 'ConditionStage' %}">檢驗檢查</a>
+							<a class="collapse-item" href="{% url 'ImagingStudy' %}">醫療影像及報告</a>                        
+						</div>
+					</div>
+				</li>
+				{% endif %}
+				<hr class="sidebar-divider d-none d-md-block">
+				{% if right.0.patient %}
+				
+				<li class="nav-item">
+					<a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseOne"
+						aria-expanded="true" aria-controls="collapseOne">
+						<i class="fas fa-fw fa-hospital-user"></i>
+						<span>病人資料</span>
+					</a>
+					<div id="collapseOne" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+						<div class="bg-white py-2 collapse-inner rounded">
+							<a class="collapse-item" href="{% url 'Patient' %}">基本資料</a>
+							<a class="collapse-item" href="{% url 'AllergyIntolerance' %}">過敏資料</a>
+							<a class="collapse-item" href="{% url 'FamilyMemberHistory' %}">家族病史</a>
+							<a class="collapse-item" href="{% url 'Immunization' %}">疫苗接種紀錄</a>
+						</div>
+					</div>
+				</li>
+				{% endif %}
+				{% if right.0.administrative %}
+
+				<li class="nav-item">
+					<a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseAD"
+						aria-expanded="true" aria-controls="collapseAD">
+						<i class="fas fa-fw fa-hospital-user"></i>
+						<span>行政資料</span>
+					</a>
+					<div id="collapseAD" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+						<div class="bg-white py-2 collapse-inner rounded">
+							<a class="collapse-item" href="{% url 'Patient' %}" disabled>使用紀錄查詢</a>
+							<a class="collapse-item" href="{% url 'Organization' %}" disabled>Organization</a>                        
+							<a class="collapse-item" href="{% url 'Practitioner' %}" disabled>Practitioner</a>
+							<a class="collapse-item" href="{% url 'Patient' %}" disabled>HealthcareService</a>
+						</div>
+					</div>
+				</li>
+				{% endif %}
+			{% else %}
+				<a class="dropdown-item" href="{% url 'login' %}">
+					<i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+					Login
+				</a>
+			{% endif %}
+            <hr class="sidebar-divider">
+
+            <div class="text-center d-none d-md-inline">
+                <button class="rounded-circle border-0" id="sidebarToggle"></button>
+            </div>
+        </ul>
