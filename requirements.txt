@@ -26,4 +26,4 @@ Pillow==9.4.0
 django-cors-headers==3.14.0
 ms_identity_python[django] @ https://github.com/azure-samples/ms-identity-python/archive/refs/heads/0.9.zip
 python-dotenv<0.22
-ldap3 2.9.1
+ldap3==2.9.1
