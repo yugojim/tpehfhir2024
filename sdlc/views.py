@@ -33,20 +33,90 @@ from django.contrib.auth.signals import user_logged_in
 from django.dispatch import receiver
 from .models import UserLoginRecord
 from django.utils.timezone import now
-
+from django.db.models import Q
 import csv
-def export_login_records_csv(request):
-    # 設定 CSV 回應
+
+# 查詢與顯示的 View
+def login_record_list(request):
+    user = request.user
+    right=models.Permission.objects.filter(user__username__startswith=user.username)
+    query = request.GET.get('query', '')
+    start_time = request.GET.get('start_time', '')
+    end_time = request.GET.get('end_time', '')
+
+    records = UserLoginRecord.objects.all()
+
+    # 篩選條件
+    if query:
+        records = records.filter(
+            Q(user__username__icontains=query) |
+            Q(ip_address__icontains=query)
+        )
+    
+    # 時間範圍過濾
+    if start_time:
+        try:
+            start_time = datetime.strptime(start_time, '%Y-%m-%d')
+            records = records.filter(login_time__gte=start_time)
+        except ValueError:
+            pass  # 忽略無效日期輸入
+    
+    if end_time:
+        try:
+            end_time = datetime.strptime(end_time, '%Y-%m-%d')
+            records = records.filter(login_time__lte=end_time)
+        except ValueError:
+            pass  # 忽略無效日期輸入
+
+    context = {
+            'right' : right,
+            'records': records
+            }
+    return render(request, 'login_records.html', context)
+
+# 資料下載的 View
+def download_login_records(request):
+    records = UserLoginRecord.objects.all()
+
+    # 篩選條件
+    query = request.GET.get('query', '')
+    start_time = request.GET.get('start_time', '')
+    end_time = request.GET.get('end_time', '')
+
+    if query:
+        records = records.filter(
+            Q(user__username__icontains=query) |
+            Q(ip_address__icontains=query)
+        )
+
+    if start_time:
+        try:
+            start_time = datetime.strptime(start_time, '%Y-%m-%d')
+            records = records.filter(login_time__gte=start_time)
+        except ValueError:
+            pass
+
+    if end_time:
+        try:
+            end_time = datetime.strptime(end_time, '%Y-%m-%d')
+            records = records.filter(login_time__lte=end_time)
+        except ValueError:
+            pass
+
+    # 生成 CSV 檔案
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="login_records.csv"'
 
     writer = csv.writer(response)
-    # 定義 CSV 標題
     writer.writerow(['Username', 'Login Time', 'IP Address', 'User Agent'])
 
-    # 寫入資料
-    for record in UserLoginRecord.objects.all():
-        writer.writerow([record.user.username, record.login_time, record.ip_address, record.user_agent])
+    for record in records:
+        writer.writerow([
+            record.user.username,
+            record.login_time,
+            record.ip_address,
+            record.user_agent
+        ])
 
     return response
 

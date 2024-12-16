@@ -17,6 +17,7 @@ class CustomAuthBackend:
 '''
 from django.contrib.auth.backends import BaseBackend
 from django.contrib.auth.models import User
+from .models import Permission
 '''
 from ldap3 import Server, Connection, ALL
 
@@ -46,7 +47,43 @@ class CustomAuthBackend(BaseBackend):
             if created:
                 user.set_password(special_password)  # 设置用户为无密码
                 user.save()
+            print(user.username)
+            try:
+                print("更新权限")
+                permission = Permission.objects.get(                
+                    user=user,
+                    title="默认权限",  # 设置权限标题
+                    patient=True,  # 默认允许查看病人资料
+                    outpatient=True,  # 默认允许门诊权限
+                    emergency=False,  # 默认值
+                    inpatient=False,  # 默认值
+                    medication=True,  # 默认值
+                    report=True,  # 默认值
+                    administrative=False,  # 默认值
+                    up=False  # 默认值
+                )
+                permission.save()
+                print("权限更新成功")
+            except Permission.DoesNotExist:
+                print("创建权限记录")
+                permission = Permission.objects.create(
+                    user=user,
+                    title="默认权限",  # 设置权限标题
+                    patient=True,  # 默认允许查看病人资料
+                    outpatient=True,  # 默认允许门诊权限
+                    emergency=False,  # 默认值
+                    inpatient=False,  # 默认值
+                    medication=True,  # 默认值
+                    report=True,  # 默认值
+                    administrative=False,  # 默认值
+                    up=False  # 默认值
+                )
+                permission.save()
+            print("新权限记录创建成功")
             return user
+            # 调用函数更新权限
+
+        
         return None
 
     def get_user(self, user_id):
@@ -54,3 +91,6 @@ class CustomAuthBackend(BaseBackend):
             return User.objects.get(pk=user_id)
         except User.DoesNotExist:
             return None
+
+    
+

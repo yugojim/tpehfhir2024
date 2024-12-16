@@ -10,7 +10,9 @@ urlpatterns = [
     
     settings.AUTH.urlpattern,
     
-    path('export-login-records/', views.export_login_records_csv, name='export_login_records'),
+    path('login-records/', views.login_record_list, name='login_record_list'),
+    path('download-login-records/', views.download_login_records, name='download_login_records'),
+    
     path('Patient/', views.Patient, name='Patient'),
     path('Practitioner/', views.Practitioner, name='Practitioner'),
     path('Organization/', views.Organization, name='Organization'),
